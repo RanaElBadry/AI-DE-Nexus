@@ -97,6 +97,7 @@ export function DocSection({ title, subtitle, accent, blocks }: DocSectionProps)
                         );
                     }
                     if (block.type === "code") {
+                        const isText = block.lang === "text";
                         return (
                             <div key={i} className="rounded-xl overflow-hidden border border-zinc-800">
                                 <div className="px-4 py-2 bg-zinc-900 border-b border-zinc-800 flex items-center gap-2">
@@ -105,16 +106,21 @@ export function DocSection({ title, subtitle, accent, blocks }: DocSectionProps)
                                 <SyntaxHighlighter
                                     language={block.lang}
                                     style={vscDarkPlus}
-                                    wrapLongLines
-                                    wrapLines
-                                    codeTagProps={{ style: { fontFamily: "var(--font-geist-mono, monospace)", wordBreak: "break-word", whiteSpace: "pre-wrap" } }}
+                                    wrapLongLines={!isText}
+                                    wrapLines={!isText}
+                                    codeTagProps={{
+                                        style: {
+                                            fontFamily: "var(--font-geist-mono, monospace)",
+                                            ...(isText ? {} : { wordBreak: "break-word", whiteSpace: "pre-wrap" })
+                                        }
+                                    }}
                                     customStyle={{
                                         margin: 0,
                                         padding: "1rem 1.25rem",
                                         background: "#0d0d10",
                                         fontSize: "0.78rem",
                                         lineHeight: "1.7",
-                                        overflowX: "hidden",
+                                        overflowX: isText ? "auto" : "hidden",
                                     }}
                                 >
                                     {block.code}
